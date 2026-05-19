@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Creador@s3D Logo">
+  <defs>
+    <linearGradient id="grad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#0d1a35"/>
+      <stop offset="100%" stop-color="#0a1228"/>
+    </linearGradient>
+    <linearGradient id="grad-text" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e0d8ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo con bordes redondeados -->
+  <rect width="512" height="512" rx="120" fill="url(#grad-bg)"/>
+
+  <!-- Líneas decorativas (grilla 3D) -->
+  <g opacity="0.15" stroke="white" stroke-width="2" fill="none">
+    <line x1="100" y1="256" x2="412" y2="256"/>
+    <line x1="256" y1="100" x2="256" y2="412"/>
+    <line x1="130" y1="160" x2="382" y2="352"/>
+    <line x1="382" y1="160" x2="130" y2="352"/>
+  </g>
+
+  <!-- Hexágono decorativo detrás del texto -->
+  <polygon points="256,140 340,187 340,280 256,327 172,280 172,187"
+    fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+
+  <!-- Símbolo @ estilizado como marca -->
+  <text x="256" y="240"
+    font-family="'Syne', 'Inter', Arial, sans-serif"
+    font-size="96"
+    font-weight="900"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="url(#grad-text)">@</text>
+
+  <!-- Texto "3D" abajo -->
+  <text x="256" y="355"
+    font-family="'Syne', 'Inter', Arial, sans-serif"
+    font-size="100"
+    font-weight="900"
+    letter-spacing="-4"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="rgba(255,255,255,0.9)">3D</text>
+
+  <!-- Punto de acento -->
+  <circle cx="256" cy="430" r="12" fill="#00d4aa"/>
+</svg>

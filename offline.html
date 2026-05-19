@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7B68EE" />
+  <title>Sin Conexión — Creador@s3D</title>
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --color-bg:      #070710;
+      --color-surface: #0e0e1d;
+      --color-primary: #7B68EE;
+      --color-accent:  #00d4aa;
+      --color-text:    #eeeaff;
+      --color-muted:   #665e88;
+      --font-display:  'Raleway', -apple-system, sans-serif;
+      --font-sans:     'Jost', 'Inter', -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { color-scheme: dark; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .offline-wrap {
+      text-align: center;
+      max-width: 480px;
+      animation: fade-up .6s cubic-bezier(.4,0,.2,1) both;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Icon animado */
+    .offline-icon {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+    .offline-icon svg {
+      width: 100%;
+      height: 100%;
+      color: var(--color-primary);
+      opacity: .7;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .7; transform: scale(1); }
+      50%       { opacity: 1; transform: scale(1.06); }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      margin-bottom: .75rem;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #a99cf5 0%, #00d4aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #a8a0c8;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Servicios disponibles offline */
+    .services-offline {
+      display: grid;
+      gap: .75rem;
+      margin-bottom: 2.5rem;
+      text-align: left;
+    }
+    .service-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .9rem 1.1rem;
+      background: #0e0e1d;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px;
+      font-size: .88rem;
+      color: #a8a0c8;
+    }
+    .service-item__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      flex-shrink: 0;
+    }
+
+    /* Formulario offline */
+    .offline-form-wrap {
+      background: #0e0e1d;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+    .offline-form-wrap h2 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .offline-form-wrap p {
+      font-size: .82rem;
+      color: #665e88;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .form-row input,
+    .form-row textarea {
+      font-family: var(--font-sans);
+      font-size: .88rem;
+      background: #14142a;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: .65rem .9rem;
+      color: var(--color-text);
+      outline: none;
+      width: 100%;
+      transition: border-color .2s;
+    }
+    .form-row input:focus,
+    .form-row textarea:focus {
+      border-color: var(--color-primary);
+    }
+    .form-row input::placeholder,
+    .form-row textarea::placeholder { color: #665e88; }
+    .form-row textarea { resize: vertical; min-height: 80px; }
+
+    .btn-offline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      width: 100%;
+      padding: .75rem;
+      margin-top: .75rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 9999px;
+      font-family: var(--font-sans);
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-offline:hover { background: #6357cc; }
+
+    /* Nota de sincronización */
+    .sync-note {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .75rem 1rem;
+      background: rgba(0, 212, 170, .08);
+      border: 1px solid rgba(0, 212, 170, .2);
+      border-radius: 12px;
+      font-size: .8rem;
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+    .sync-note svg { flex-shrink: 0; }
+
+    /* Branding */
+    .offline-brand {
+      margin-top: 2.5rem;
+      font-family: var(--font-display);
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--color-muted);
+    }
+    .offline-brand strong { color: var(--color-primary); }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@700;800;900&family=Jost:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="offline-wrap">
+    <!-- Icono sin señal -->
+    <div class="offline-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="1" y1="1" x2="23" y2="23"/>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+        <path d="M10.71 5.05A16 16 0 0 1 22.56 9"/>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+      </svg>
+    </div>
+
+    <h1>¡Ups! Te quedaste <span>sin señal</span></h1>
+    <p class="subtitle">
+      No hay conexión a internet en este momento,<br />
+      pero podés dejarnos tu mensaje igual — lo enviaremos en cuanto reconectes.
+    </p>
+
+    <!-- Servicios disponibles para ver offline -->
+    <div class="services-offline" aria-label="Nuestros servicios">
+      <div class="service-item">
+        <span class="service-item__dot"></span>
+        Diseño Web — PWA, Landing Pages, E-commerce
+      </div>
+      <div class="service-item">
+        <span class="service-item__dot"></span>
+        Identidad de Marca — Logo, Manual, Branding
+      </div>
+      <div class="service-item">
+        <span class="service-item__dot"></span>
+        Impresión 3D — Prototipos y Objetos a Medida
+      </div>
+      <div class="service-item">
+        <span class="service-item__dot"></span>
+        Desarrollo de Software — Apps Web y API
+      </div>
+    </div>
+
+    <!-- Formulario que guarda el mensaje en IndexedDB -->
+    <div class="offline-form-wrap">
+      <h2>Dejá tu mensaje</h2>
+      <p>Se guarda en tu dispositivo y se enviará automáticamente cuando recuperes la conexión.</p>
+      <form id="offline-form" novalidate>
+        <div class="form-row">
+          <input type="text"  name="name"    placeholder="Tu nombre"  required autocomplete="name" />
+          <input type="email" name="email"   placeholder="tu@email.com" autocomplete="email" />
+          <textarea name="message" placeholder="Contame sobre tu proyecto..." rows="3" required></textarea>
+          <button type="submit" class="btn-offline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+            Guardar mensaje
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Nota de sincronización automática -->
+    <div class="sync-note" role="note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+      Sincronización automática al recuperar la señal
+    </div>
+
+    <p class="offline-brand">Creador<strong>@s3D</strong> · Mar del Plata</p>
+  </div>
+
+  <script>
+    const DB_NAME    = 'creadores3d-db';
+    const STORE_NAME = 'pending-messages';
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+          }
+        };
+        req.onsuccess = (e) => resolve(e.target.result);
+        req.onerror   = (e) => reject(e.target.error);
+      });
+    }
+
+    document.getElementById('offline-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(e.target));
+      if (!data.name || !data.message) {
+        alert('Por favor completá tu nombre y mensaje.');
+        return;
+      }
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).add({ ...data, timestamp: Date.now(), source: 'offline-page' });
+        tx.oncomplete = () => {
+          e.target.reset();
+          const btn = e.target.querySelector('button');
+          btn.textContent = '✓ Guardado — te escribimos al reconectar';
+          btn.disabled = true;
+          btn.style.background = '#16a34a';
+        };
+      } catch (err) {
+        console.error('Error al guardar:', err);
+        alert('No se pudo guardar el mensaje. Intentá de nuevo.');
+      }
+    });
+
+    // Si vuelve la conexión, redirigir a inicio
+    window.addEventListener('online', () => {
+      setTimeout(() => { window.location.href = '/'; }, 1500);
+    });
+  </script>
+</body>
+</html>
