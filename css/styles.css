@@ -762,6 +762,27 @@ input, textarea, select {
   font-size: .82rem;
   color: var(--color-text-muted);
 }
+.footer__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  text-align: center;
+}
+.footer__nap {
+  font-style: normal;
+  font-size: .78rem;
+  color: var(--color-text-muted);
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer__nap a {
+  color: var(--color-text-muted);
+  transition: color var(--t);
+}
+.footer__nap a:hover { color: var(--color-primary-l); }
 .footer__tagline {
   font-size: .78rem;
   color: var(--color-text-muted);
