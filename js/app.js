@@ -56,6 +56,14 @@ function closeMenu() {
   document.body.style.overflow = '';
 }
 
+// Cerrar menú al tocar fuera
+document.addEventListener('click', (e) => {
+  const isOpen = navToggle?.getAttribute('aria-expanded') === 'true';
+  if (isOpen && !nav?.contains(e.target) && !navToggle?.contains(e.target)) {
+    closeMenu();
+  }
+});
+
 /* ════════════════════════════════════════
    OFFLINE / ONLINE DETECTION
    ════════════════════════════════════════ */
