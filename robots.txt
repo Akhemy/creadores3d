@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://akhemy.github.io/creadores3d/sitemap.xml
+Sitemap: https://creadoras3d.com.ar/sitemap.xml
