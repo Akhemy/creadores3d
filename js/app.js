@@ -159,7 +159,7 @@ function validateForm(form) {
       valid = false;
     } else if (field.type === 'email' && !isValidEmail(field.value)) {
       group?.classList.add('has-error');
-      if (error) error.textContent = 'Ingresá un email válido.';
+      if (error) error.textContent = 'Ingresa un email válido.';
       valid = false;
     } else {
       group?.classList.remove('has-error');

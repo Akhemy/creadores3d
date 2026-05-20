@@ -222,7 +222,7 @@
     <h1>¡Ups! Te quedaste <span>sin señal</span></h1>
     <p class="subtitle">
       No hay conexión a internet en este momento,<br />
-      pero podés dejarnos tu mensaje igual — lo enviaremos en cuanto reconectes.
+      pero puedes dejarnos tu mensaje — lo enviamos en cuanto recuperes la conexión.
     </p>
 
     <!-- Servicios disponibles para ver offline -->
@@ -297,7 +297,7 @@
       e.preventDefault();
       const data = Object.fromEntries(new FormData(e.target));
       if (!data.name || !data.message) {
-        alert('Por favor completá tu nombre y mensaje.');
+        alert('Por favor completa tu nombre y mensaje.');
         return;
       }
       try {
