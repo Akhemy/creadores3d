@@ -61,9 +61,7 @@ if (form) {
 
       if (!res.ok) throw new Error('Error al enviar');
 
-      const text = buildWhatsAppText(data);
-      window.open(`${WA_BASE_URL}?text=${text}`, '_blank', 'noopener,noreferrer');
-      showToast('Mensaje enviado — abriendo WhatsApp ✓');
+      showToast('Mensaje enviado con éxito ✓ Te respondo pronto.');
       form.reset();
     } catch {
       showToast('No se pudo enviar. Intentalo de nuevo.');
