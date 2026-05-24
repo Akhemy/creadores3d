@@ -46,15 +46,28 @@ document.addEventListener('click', (e) => {
 const form = document.getElementById('contact-form');
 
 if (form) {
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateForm(form)) return;
 
     const data = Object.fromEntries(new FormData(form));
-    const text = buildWhatsAppText(data);
-    window.open(`${WA_BASE_URL}?text=${text}`, '_blank', 'noopener,noreferrer');
-    showToast('Abriendo WhatsApp ✓');
-    form.reset();
+
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'form-name': 'contacto', ...data }).toString(),
+      });
+
+      if (!res.ok) throw new Error('Error al enviar');
+
+      const text = buildWhatsAppText(data);
+      window.open(`${WA_BASE_URL}?text=${text}`, '_blank', 'noopener,noreferrer');
+      showToast('Mensaje enviado — abriendo WhatsApp ✓');
+      form.reset();
+    } catch {
+      showToast('No se pudo enviar. Intentalo de nuevo.');
+    }
   });
 }
 
