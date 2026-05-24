@@ -2,37 +2,15 @@
    Creador@s3D — app.js
    ════════════════════════════════════════ */
 
-/* WhatsApp: +54 9 223 342-2297 */
-const WA_NUMBER = '5492233422297';
-
+const WA_NUMBER   = '5492233422297';
 const WA_BASE_URL = `https://wa.me/${WA_NUMBER}`;
-
-/* ════════════════════════════════════════
-   SERVICE WORKER
-   ════════════════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', async () => {
-    try {
-      const reg = await navigator.serviceWorker.register('/sw.js');
-      console.log('[SW] Registrado:', reg.scope);
-    } catch (err) {
-      console.error('[SW] Error al registrar:', err);
-    }
-  });
-
-  navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data?.type === 'SYNC_COMPLETE') {
-      showToast('Conexión restaurada — mensajes enviados ✓');
-    }
-  });
-}
 
 /* ════════════════════════════════════════
    HEADER: scroll + menú mobile
    ════════════════════════════════════════ */
-const header  = document.querySelector('.header');
+const header    = document.querySelector('.header');
 const navToggle = document.querySelector('.nav__toggle');
-const nav     = document.querySelector('.nav');
+const nav       = document.querySelector('.nav');
 
 window.addEventListener('scroll', () => {
   header?.classList.toggle('is-scrolled', window.scrollY > 10);
@@ -45,7 +23,6 @@ navToggle?.addEventListener('click', () => {
   document.body.style.overflow = expanded ? '' : 'hidden';
 });
 
-// Cerrar menú al hacer click en un link
 nav?.querySelectorAll('.nav__link').forEach((link) => {
   link.addEventListener('click', closeMenu);
 });
@@ -56,7 +33,6 @@ function closeMenu() {
   document.body.style.overflow = '';
 }
 
-// Cerrar menú al tocar fuera
 document.addEventListener('click', (e) => {
   const isOpen = navToggle?.getAttribute('aria-expanded') === 'true';
   if (isOpen && !nav?.contains(e.target) && !navToggle?.contains(e.target)) {
@@ -65,58 +41,16 @@ document.addEventListener('click', (e) => {
 });
 
 /* ════════════════════════════════════════
-   OFFLINE / ONLINE DETECTION
-   ════════════════════════════════════════ */
-const offlineBanner = document.querySelector('.offline-banner');
-
-function setOnlineState(isOnline) {
-  document.documentElement.classList.toggle('is-offline', !isOnline);
-  if (offlineBanner) {
-    offlineBanner.setAttribute('aria-hidden', String(isOnline));
-  }
-}
-
-window.addEventListener('online',  () => {
-  setOnlineState(true);
-  showToast('Conexión restaurada.');
-  triggerBackgroundSync();
-});
-
-window.addEventListener('offline', () => {
-  setOnlineState(false);
-  showToast('Sin señal — tus mensajes se enviarán al reconectar.');
-});
-
-// Estado inicial
-setOnlineState(navigator.onLine);
-
-async function triggerBackgroundSync() {
-  if (!('serviceWorker' in navigator) || !('SyncManager' in window)) return;
-  try {
-    const reg = await navigator.serviceWorker.ready;
-    await reg.sync.register('sync-contact-messages');
-  } catch { /* Background Sync no soportado, silencioso */ }
-}
-
-/* ════════════════════════════════════════
    FORMULARIO DE CONTACTO
    ════════════════════════════════════════ */
 const form = document.getElementById('contact-form');
 
 if (form) {
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!validateForm(form)) return;
 
     const data = Object.fromEntries(new FormData(form));
-
-    if (!navigator.onLine) {
-      await queueMessage(data);
-      showToast('Sin señal — el mensaje se guardó y se enviará al reconectar.');
-      form.reset();
-      return;
-    }
-
     const text = buildWhatsAppText(data);
     window.open(`${WA_BASE_URL}?text=${text}`, '_blank', 'noopener,noreferrer');
     showToast('Abriendo WhatsApp ✓');
@@ -135,9 +69,9 @@ function buildWhatsAppText({ name, email, service, message }) {
 
   const text = [
     `Hola! Soy *${name}*`,
-    email   ? `📧 ${email}`            : '',
+    email   ? `📧 ${email}`                : '',
     service ? `🛠 Servicio: ${serviceLabel}` : '',
-    message ? `\n${message}`            : '',
+    message ? `\n${message}`               : '',
   ]
     .filter(Boolean)
     .join('\n');
@@ -145,7 +79,6 @@ function buildWhatsAppText({ name, email, service, message }) {
   return encodeURIComponent(text);
 }
 
-/* ─── Validación básica ─── */
 function validateForm(form) {
   let valid = true;
 
@@ -174,7 +107,6 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
-// Limpiar errores al tipear
 form?.querySelectorAll('input, textarea').forEach((field) => {
   field.addEventListener('input', () => {
     const group = field.closest('.form-group');
@@ -183,40 +115,6 @@ form?.querySelectorAll('input, textarea').forEach((field) => {
     if (error) error.textContent = '';
   });
 });
-
-/* ════════════════════════════════════════
-   INDEXEDDB — cola de mensajes offline
-   ════════════════════════════════════════ */
-const DB_NAME    = 'creadores3d-db';
-const DB_VERSION = 1;
-const STORE_NAME = 'pending-messages';
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-      }
-    };
-
-    req.onsuccess = (e) => resolve(e.target.result);
-    req.onerror   = (e) => reject(e.target.error);
-  });
-}
-
-async function queueMessage(data) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx    = db.transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    store.add({ ...data, timestamp: Date.now() });
-    tx.oncomplete = resolve;
-    tx.onerror    = reject;
-  });
-}
 
 /* ════════════════════════════════════════
    SMOOTH SCROLL
