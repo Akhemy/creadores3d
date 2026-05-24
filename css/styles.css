@@ -738,11 +738,6 @@ input, textarea, select {
   border-color: #f87171;
 }
 
-.form__note {
-  font-size: .75rem;
-  color: var(--color-text-muted);
-  text-align: center;
-}
 
 /* ════════════════════════════════════════
    FOOTER
