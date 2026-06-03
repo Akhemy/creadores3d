@@ -1493,7 +1493,7 @@ input, textarea, select {
 }
 
 .numer-banner__desc {
-  color: var(--color-text-soft);
+  color: #cdd8e8;
   font-size: .97rem;
   line-height: 1.7;
   max-width: 560px;
@@ -1512,7 +1512,7 @@ input, textarea, select {
   align-items: flex-start;
   gap: .6rem;
   font-size: .9rem;
-  color: var(--color-text-soft);
+  color: #cdd8e8;
 }
 .numer-banner__list li svg { margin-top: .2rem; }
 .numer-banner__list li strong { color: var(--color-text); }
