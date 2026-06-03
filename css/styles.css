@@ -68,6 +68,29 @@ input, textarea, select {
 }
 
 /* ─── Accesibilidad ─── */
+
+/* Quita el outline por defecto en todos los navegadores */
+:focus { outline: none; }
+
+/* Muestra foco claro SOLO cuando se navega con teclado (no con mouse) */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+  scroll-margin-top: 80px;
+}
+
+/* Foco en botones e inputs con fondo */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(0, 229, 255, 0.15);
+}
+
 .skip-link {
   position: absolute;
   top: -100%;
@@ -81,6 +104,11 @@ input, textarea, select {
   transition: top var(--t);
 }
 .skip-link:focus { top: 1rem; }
+.skip-link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-primary);
+}
 
 /* ─── Layout ─── */
 .container {
@@ -1851,6 +1879,118 @@ input, textarea, select {
   font-size: .72rem;
   color: var(--color-text-soft);
   max-width: 120px;
+}
+
+/* ════════════════════════════════════════
+   BOTÓN ALTO CONTRASTE
+   ════════════════════════════════════════ */
+.a11y-toggle {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.5rem;
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .55rem .9rem;
+  background: var(--color-surface-2);
+  color: var(--color-text-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: .72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.a11y-toggle:hover,
+.a11y-toggle[aria-pressed="true"] {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+.a11y-toggle__label { white-space: nowrap; }
+
+/* ════════════════════════════════════════
+   MODO ALTO CONTRASTE
+   Paleta pensada para deuteranopia, protanopia
+   y tritanopia — amarillo/negro es universal.
+   ════════════════════════════════════════ */
+.high-contrast {
+  --color-bg:         #000000;
+  --color-surface:    #0a0a0a;
+  --color-surface-2:  #111111;
+  --color-surface-3:  #1a1a1a;
+  --color-primary:    #ffdd00;
+  --color-primary-d:  #ccaa00;
+  --color-primary-l:  #ffee66;
+  --color-accent:     #ffdd00;
+  --color-accent-dim: rgba(255, 221, 0, 0.15);
+  --color-text:       #ffffff;
+  --color-text-soft:  #eeeeee;
+  --color-text-muted: #bbbbbb;
+  --color-border:     rgba(255, 255, 255, 0.4);
+  --color-border-hi:  rgba(255, 221, 0, 0.7);
+  --color-prem:       #ffdd00;
+  --color-prem-d:     #ccaa00;
+}
+
+.high-contrast .gradient-text {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: #ffdd00;
+  color: #ffdd00;
+}
+
+.high-contrast .hero__orb,
+.high-contrast .hero__grid { display: none; }
+
+.high-contrast .card {
+  border-color: rgba(255,255,255,.4);
+}
+
+.high-contrast .btn--primary {
+  background: #ffdd00;
+  color: #000;
+}
+
+.high-contrast .btn--ghost {
+  border-color: #fff;
+  color: #fff;
+}
+
+.high-contrast .fab-whatsapp {
+  background: #ffdd00;
+  color: #000;
+}
+
+.high-contrast .fab-whatsapp svg { color: #000; }
+.high-contrast .fab-whatsapp__label { color: #000; }
+
+/* ════════════════════════════════════════
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   Apaga animaciones para personas con epilepsia,
+   vértigo o sensibilidad al movimiento.
+   ════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cube, .cube__face,
+  .cube__story, .story__scan,
+  .hero__orb,
+  .nc-ripple,
+  .badge__dot,
+  .eyebrow__dot,
+  .fab-whatsapp__pulse,
+  .about__photo-ring,
+  .numer-synergy {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .reviews__footer {

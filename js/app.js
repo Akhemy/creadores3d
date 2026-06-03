@@ -323,6 +323,46 @@ function showToast(message) {
   }
 })();
 
+/* ════════════════════════════════════════
+   FOCO POR TECLADO — scroll automático
+   Solo actúa cuando el usuario navega con Tab,
+   no interfiere con el mouse.
+   ════════════════════════════════════════ */
+(function () {
+  let keyboard = false;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Tab') keyboard = true; });
+  document.addEventListener('mousedown', () => { keyboard = false; });
+
+  document.addEventListener('focusin', (e) => {
+    if (!keyboard) return;
+    const el = e.target;
+    if (!el || el === document.body) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+})();
+
+/* ════════════════════════════════════════
+   ALTO CONTRASTE (daltonismo / baja visión)
+   ════════════════════════════════════════ */
+(function () {
+  const btn = document.getElementById('a11y-toggle');
+  const html = document.documentElement;
+  const KEY = 'hc';
+
+  function set(on) {
+    html.classList.toggle('high-contrast', on);
+    btn?.setAttribute('aria-pressed', String(on));
+    localStorage.setItem(KEY, on ? '1' : '0');
+  }
+
+  // Restaurar preferencia guardada
+  if (localStorage.getItem(KEY) === '1') set(true);
+
+  btn?.addEventListener('click', () => {
+    set(!html.classList.contains('high-contrast'));
+  });
+})();
+
 /* ─── Año en el footer ─── */
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
