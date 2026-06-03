@@ -1483,6 +1483,8 @@ select:focus-visible {
   grid-template-columns: 1fr auto;
   gap: 3rem 4rem;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .numer-banner__label {
@@ -1601,15 +1603,32 @@ select:focus-visible {
 }
 
 /* responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .numer-banner__inner {
     grid-template-columns: 1fr;
   }
   .numer-banner__visual {
-    display: none;
+    display: none !important;
   }
   .numer-banner__actions {
     align-items: stretch;
+  }
+  .numer-banner__title {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+  .numer-banner__list li {
+    font-size: .88rem;
+  }
+  .numer-banner__list li svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: .15rem;
+  }
+  .btn--premium {
+    text-align: center;
+    width: 100%;
+    justify-content: center;
   }
 }
 
@@ -1909,6 +1928,16 @@ select:focus-visible {
   border-color: var(--color-primary);
 }
 .a11y-toggle__label { white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .a11y-toggle {
+    bottom: 7rem;
+    padding: .6rem;
+    border-color: rgba(255,255,255,.2);
+    background: var(--color-surface-3);
+  }
+  .a11y-toggle__label { display: none; }
+}
 
 /* ════════════════════════════════════════
    MODO ALTO CONTRASTE
