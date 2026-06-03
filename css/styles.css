@@ -1518,7 +1518,7 @@ input, textarea, select {
 .numer-banner__list li strong { color: var(--color-text); }
 .numer-banner__list li svg {
   flex-shrink: 0;
-  color: var(--color-prem);
+  color: #c4b5fd;
 }
 
 .numer-banner__actions {
