@@ -206,14 +206,19 @@ function showToast(message) {
     tip.classList.remove('is-visible');
 
     const rect = pill.getBoundingClientRect();
-    const tipW  = 220;
+    const tipW  = Math.min(220, window.innerWidth - 16);
     let left = rect.left + rect.width / 2 - tipW / 2;
     left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
-    const top = rect.top - 8;
 
-    tip.style.left   = left + 'px';
-    tip.style.top    = top + 'px';
-    tip.style.transform = 'translateY(calc(-100% + 4px))';
+    // Si la pill está en el tercio superior de la pantalla → tooltip abajo
+    const showBelow = rect.top < window.innerHeight / 3;
+    const top = showBelow ? rect.bottom + 8 : rect.top - 8;
+    const transform = showBelow ? 'translateY(0)' : 'translateY(calc(-100% + 4px))';
+
+    tip.style.left      = left + 'px';
+    tip.style.top       = top + 'px';
+    tip.style.width     = tipW + 'px';
+    tip.style.transform = transform;
 
     requestAnimationFrame(() => tip.classList.add('is-visible'));
   }
@@ -358,9 +363,13 @@ function showToast(message) {
   // Restaurar preferencia guardada
   if (localStorage.getItem(KEY) === '1') set(true);
 
-  btn?.addEventListener('click', () => {
+  function toggle(e) {
+    e.preventDefault();
     set(!html.classList.contains('high-contrast'));
-  });
+  }
+
+  btn?.addEventListener('click', toggle);
+  btn?.addEventListener('touchend', toggle, { passive: false });
 })();
 
 /* ─── Año en el footer ─── */
